@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.bit.cqt.mall.mapper.RecordMapper">
+    <!--查询所有语句-->
+    <sql id="allColumns">
+          SELECT
+          a.id,
+          a.sender_id AS 'senderId',
+          a.receiver_id AS 'receiverId',
+          a.created,
+          a.message,
+          b.username AS 'senderName',
+		  c.username AS 'receiverName'
+        FROM
+          tb_record  AS a
+    </sql>
+    <sql id="left">
+      LEFT  JOIN tb_user  AS b ON a.sender_id = b.id
+      LEFT  JOIN tb_user  AS c ON a.receiver_id = c.id
+    </sql>
+
+    <!--通过发送方ID与接收方ID获取聊天记录 按创建时间排序-->
+    <select id="getRecordById" resultType="Record" >
+        <include refid="allColumns"></include>
+        <include refid="left"></include>
+        WHERE (a.sender_id=#{senderId} AND a.receiver_id =#{receiverId}) OR (
+        a.sender_id=#{receiverId} AND a.receiver_id =#{senderId}
+        )
+        ORDER By a.created ASC
+    </select>
+
+    <!--添加-->
+    <insert id="add">
+        INSERT INTO tb_record
+        (
+          sender_id,
+          receiver_id,
+          message,
+          created
+        )
+        values
+        (
+          #{senderId},
+          #{receiverId},
+          #{message},
+          #{created}
+        )
+    </insert>
+</mapper>

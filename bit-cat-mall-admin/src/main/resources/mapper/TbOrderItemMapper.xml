@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.bit.cqt.mall.mapper.TbOrderItemMapper">
+    <sql id="itemColumns">
+         a.id       ,
+        a.item_id  ,
+        a.order_id ,
+        a.num      ,
+        a.title    ,
+        a.price    ,
+        a.total_fee,
+        a.pic_path ,
+        a.user_id
+    </sql>
+
+    <!--根据id查询数据-->
+    <select id="selectByUserId" resultType="TbOrderItem">
+        select
+        <include refid="itemColumns" />
+        from
+        tb_order_item As a
+        where
+        a.id=#{id}
+    </select>
+
+    <select id="selectByOrderId" resultType="TbOrderItem">
+        select
+        <include refid="itemColumns" />
+        from
+        tb_order_item As a
+        where
+        a.order_id=#{orderId}
+    </select>
+
+    <!-- 修改不用返回类型，就是不用从实体类中获取值 -->
+    <!-- 根据ID修改数据 -->
+    <update id="update">
+        UPDATE
+            tb_order_item
+        SET
+            item_id  =#{itemId },
+            order_id =#{orderId },
+            num      =#{num      },
+            title    =#{title    },
+            price    =#{price    },
+            total_fee=#{totalFee},
+            pic_path =#{picPath },
+        WHERE user_id = #{userId}
+    </update>
+
+
+    <!-- 添加-->
+    <insert id="insertOrder">
+        INSERT INTO tb_order_item (
+            item_id,
+            order_id,
+            num,
+            title,
+            price,
+            total_fee,
+            pic_path,
+            user_id
+        )
+        VALUES
+        (
+            #{itemId },
+            #{orderId },
+            #{num      },
+            #{title    },
+            #{price    },
+            #{totalFee},
+            #{picPath },
+            #{userId  }
+
+        );
+    </insert>
+
+    <!--删除-->
+    <delete id="delete">
+        DELETE
+        FROM tb_order_item
+        WHERE
+        id=#{id}
+    </delete>
+
+</mapper>

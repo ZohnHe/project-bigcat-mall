@@ -1,0 +1,381 @@
+
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+	<meta charset="UTF-8">
+	<link rel="shortcut icon" href="../../../static/front/images/icons/favicon.ico">
+	<link rel="stylesheet" href="../../../static/front/css/iconfont.css">
+	<link rel="stylesheet" href="../../../static/front/css/global.css">
+	<link rel="stylesheet" href="../../../static/front/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../../../static/front/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="../../../static/front/css/login.css">
+	<script src="../../../static/front/js/jquery.1.12.4.min.js" charset="UTF-8"></script>
+	<script src="../../../static/front/js/bootstrap.min.js" charset="UTF-8"></script>
+	<script src="../../../static/front/js/jquery.form.js" charset="UTF-8"></script>
+	<script src="../../../static/front/js/global.js" charset="UTF-8"></script>
+	<script src="../../../static/front/js/login.js" charset="UTF-8"></script>
+	<script src="../../../static/front/jquery/jquery.cookie.js"></script>
+
+	<title>大猫商城网 - 登录 / 注册</title>
+</head>
+<body>
+	<div class="public-head-layout container">
+		<a class="logo" href="/user/index"><img src="../../../static/front/images/icons/logo2.png" alt="大猫商城网" class="cover"></a>
+	</div>
+	<div style="background:url(../../../static/front/images/temp/banner_14.jpg) no-repeat center center; ">
+		<div class="login-layout container">
+			<div class="form-box login">
+				<div class="tabs-nav">
+					<h2>欢迎登录大猫商城网平台</h2>
+				</div>
+				<div class="tabs_container">
+					<form class="tabs_form" action="" method="post" id="userLoginFrm">
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+								</div>
+								<input class="form-control" name="loginId" id="loginId" required placeholder="用户名/手机号/邮箱"  autocomplete="off" type="text">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+								</div>
+								<input class="form-control password" name="loginPwd" id="loginPwd" placeholder="请输入密码" autocomplete="off" type="password">
+								<div class="input-group-addon pwd-toggle" title="显示密码"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></div>
+							</div>
+						</div>
+						<div class="checkbox">
+	                        <label>
+	                        	<input id="remember" type="checkbox"><i></i> 记住账号密码
+	                        </label>
+	                        <a href="#" class="pull-right" id="resetpwd">忘记密码？</a>
+	                    </div>
+	                    <!-- 错误信息 -->
+						<div class="form-group">
+							<div class="login_errormsg" id="login_error">
+
+								<!--<div class="alert alert-warning alert-dismissible fade in" role="alert">-->
+								<!--<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+								<!--<strong>${msg}</strong>-->
+							<!--</div>-->
+
+							</div>
+						</div>
+	                    <button class="btn btn-large btn-primary btn-lg btn-block submit" id="login_submit" type="button">登录</button><br>
+	                    <p class="text-center">没有账号？<a href="javascript:;" id="register">免费注册</a></p>
+                    </form>
+
+
+                    <div class="tabs_div">
+	                    <div class="success-box">
+	                    	<div class="success-msg">
+								<i class="success-icon"></i>
+	                    		<p class="success-text">登录成功</p>
+	                    	</div>
+	                    </div>
+	                    <div class="option-box">
+	                    	<div class="buts-title">
+	                    		现在您可以
+	                    	</div>
+	                    	<div class="buts-box">
+	                    		<a role="button" href="index.html" class="btn btn-block btn-lg btn-default">继续访问商城</a>
+								<a role="button" href="udai_welcome.html" class="btn btn-block btn-lg btn-info">登录会员中心</a>
+	                    	</div>
+	                    </div>
+                    </div>
+                </div>
+			</div>
+			<div class="form-box register">
+  				<div class="tabs-nav">
+  					<h2>欢迎注册<a href="javascript:;" class="pull-right fz16" id="reglogin">返回登录</a></h2>
+  				</div>
+  				<div class="tabs_container">
+					<form class="tabs_form" action="index.html" method="post" id="register_form">
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+								</div>
+								<input class="form-control" name="register_username" id="register_username" required placeholder="请输入用户名"  autocomplete="off" type="text">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+								</div>
+								<input class="form-control password" name="register_password" id="register_password" placeholder="请输入密码" autocomplete="off" type="password">
+								<div class="input-group-addon pwd-toggle" title="显示密码"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></div>
+							</div>
+						</div>
+						<div class="checkbox">
+	                        <label>
+	                        	<input  id="register_checkbox" type="checkbox"><i></i> 我同意<a href="../../../static/front/temp_article/useragreement.html" target="_blank">《大猫商城网用户协议》</a>
+	                        </label>
+	                    </div>
+	                    <!-- 错误信息 -->
+						<div class="form-group">
+							<div class="register_errormsg" id="register_errormsg"></div>
+						</div>
+	                    <button class="btn btn-large btn-primary btn-lg btn-block submit" id="register_submit" type="button">注册</button>
+                    </form>
+                    <div class="tabs_div">
+	                    <div class="success-box">
+	                    	<div class="success-msg">
+								<i class="success-icon"></i>
+	                    		<p class="success-text">注册成功</p>
+	                    	</div>
+	                    </div>
+	                    <div class="option-box">
+	                    	<div class="buts-title">
+	                    		现在您可以
+	                    	</div>
+	                    	<div class="buts-box">
+	                    		<a role="button" href="index.html" class="btn btn-block btn-lg btn-default">继续访问商城</a>
+								<a role="button" href="udai_welcome.html" class="btn btn-block btn-lg btn-info">登录会员中心</a>
+	                    	</div>
+	                    </div>
+                    </div>
+                </div>
+			</div>
+			<div class="form-box resetpwd">
+  				<div class="tabs-nav clearfix">
+  					<h2>忘记密码怎么办？<a href="javascript:;" class="pull-right fz16" id="pwdlogin">返回登录</a></h2>
+  				</div>
+  				<div class="tabs_container">
+
+					<div class="alert alert-warning alert-dismissible fade in" role="alert">
+					<!--<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+					<h3>我也没办法&nbsp;&nbsp;(；′⌒`)</h3>
+					</div><div class="alert alert-warning alert-dismissible fade in" role="alert">
+					<!--<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+					<h3>重新注册一个吧！</h3>
+				</div>
+					<!--<form class="tabs_form" action="" method="post" id="resetpwd_form">-->
+						<!--<div class="form-group">-->
+							<!--<div class="input-group">-->
+								<!--<div class="input-group-addon">-->
+									<!--<span class="glyphicon glyphicon-phone" aria-hidden="true"></span>-->
+								<!--</div>-->
+								<!--<input class="form-control phone" name="phone" id="resetpwd_phone" required placeholder="手机号" maxlength="11" autocomplete="off" type="text">-->
+							<!--</div>-->
+						<!--</div>-->
+						<!--<div class="form-group">-->
+							<!--<div class="input-group">-->
+								<!--<input class="form-control" name="sms" id="resetpwd_sms" placeholder="输入验证码" type="text">-->
+								<!--<span class="input-group-btn">-->
+									<!--<button class="btn btn-primary getsms" type="button">发送短信验证码</button>-->
+								<!--</span>-->
+							<!--</div>-->
+						<!--</div>-->
+						<!--<div class="form-group">-->
+							<!--<div class="input-group">-->
+								<!--<div class="input-group-addon">-->
+									<!--<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>-->
+								<!--</div>-->
+								<!--<input class="form-control password" name="password" id="resetpwd_pwd" placeholder="新的密码" autocomplete="off" type="password">-->
+								<!--<div class="input-group-addon pwd-toggle" title="显示密码"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></div>-->
+							<!--</div>-->
+						<!--</div>-->
+	                    <!--&lt;!&ndash; 错误信息 &ndash;&gt;-->
+						<!--<div class="form-group">-->
+							<!--<div class="error_msg" id="resetpwd_error"></div>-->
+						<!--</div>-->
+	                    <!--<button class="btn btn-large btn-primary btn-lg btn-block submit" id="resetpwd_submit" type="button">重置密码</button>-->
+                    <!--</form>-->
+                    <div class="tabs_div">
+	                    <div class="success-box">
+	                    	<div class="success-msg">
+								<i class="success-icon"></i>
+	                    		<p class="success-text">密码重置成功</p>
+	                    	</div>
+	                    </div>
+	                    <div class="option-box">
+	                    	<div class="buts-title">
+	                    		现在您可以
+	                    	</div>
+	                    	<div class="buts-box">
+	                    		<a role="button" href="index.html" class="btn btn-block btn-lg btn-default">继续访问商城</a>
+								<a role="button" href="login.html" class="btn btn-block btn-lg btn-info">返回登陆</a>
+	                    	</div>
+	                    </div>
+                    </div>
+                </div>
+			</div>
+
+			<script>
+
+
+
+				$("#remember").prop("checked",$.cookie('rememberme'))
+				if($.cookie('loginId')!=null&&$.cookie('loginPwd')!=null){
+					if($.cookie('loginId').length>0&&$.cookie('loginPwd').length>0){
+						$('#loginId').val($.cookie('loginId'));
+						$('#loginPwd').val($.cookie('loginPwd'));
+					}
+				}
+
+                /**
+                 * -----------登录--------------
+                 */
+                $("#login_submit").click(
+                    function () {
+                        var error = $(this).parents('form').find('.login_errormsg');
+                        var loginId = $("#loginId").val();
+                        var loginPwd = $("#loginPwd").val();
+
+                        if(($.cookie('loginPwd')==null || $.cookie('loginPwd')=="" )&&loginPwd.length>16){
+                            error.html(msgtemp('<strong>账号或密码不匹配</strong> 请重新输入',    'alert-warning'));return;
+                        }
+
+
+                        if(loginId.trim() == ""){
+                           			 error.html(msgtemp('<strong>请输入账号</strong> ',    'alert-warning'));
+                                        return;
+                                     }
+                                    if(loginPwd.trim() == ""){
+                                        error.html(msgtemp('<strong>请输入密码</strong> ',    'alert-warning'));
+                                      return;
+                                    }
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/user/userLogin",    //CORS
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify({
+                                "loginId": loginId,
+                                "loginPwd": loginPwd,
+                                "remember":$("#remember").prop("checked")
+                            }),
+                            dataType: "json",
+
+                            success: function (data) {
+
+                                var json = data;
+                                if(json.code == '200') {
+                                    if (json.data.success == 2) {
+                                        error.html(msgtemp('<strong>账号或密码错误</strong> 请重新输入',    'alert-warning'));
+                                    }else if (json.data.success == 3) {
+                                        error.html(msgtemp('<strong>账号或密码不能为空</strong> 请输入账号密码',    'alert-warning'));
+                                    } else if (json.data.success == 1) {
+                                        window.location.href = "/user/index";
+                                        //window.location.href = json.data.url;
+                                    }
+                                }else{
+                                    alert(" 服务器错误，请稍后再试。");
+                                }
+                            },
+                            error: function (message) {
+                                $("#request-process-patent").html("提交数据失败！");
+                            }
+                        });
+                    });
+
+                /**
+                 * -----------注册-------------
+                 */
+                $("#register_submit").click(
+                    function () {
+                        var error = $(this).parents('form').find('.register_errormsg');
+                        var register_username = $("#register_username").val();
+                        var register_password = $("#register_password").val();
+
+                        var register_agree = $("#register_checkbox").prop("checked");
+
+
+                        if(register_username.trim() == ""){
+                            error.html(msgtemp('<strong>用户名不能为空</strong> 请输入用户名',    'alert-warning'));
+                            return;
+                        }
+                        if(register_password.trim() == ""){
+                            error.html(msgtemp('<strong>密码不能为空</strong> 请输入密码',    'alert-warning'));
+                            return;
+                        }
+                        if(register_username.trim().length<6){
+                            error.html(msgtemp('<strong>用户名长度应为6-16位</strong> 请重新输入密码',    'alert-warning'));
+                            return;
+                        }
+                        if(register_username.trim().length>16){
+                            error.html(msgtemp('<strong>用户名长度应为6-16位</strong> 请重新输入密码',    'alert-warning'));
+                            return;
+                        }
+                        if(register_password.trim().length<6){
+                            error.html(msgtemp('<strong>密码长度应为6-18位</strong> 请重新输入密码',    'alert-warning'));
+                            return;
+                        }
+                        if(register_password.trim().length>18){
+                            error.html(msgtemp('<strong>密码长度应为6-18位</strong> 请重新输入密码',    'alert-warning'));
+                            return;
+                        }
+                        if(register_agree == false){
+                            error.html(msgtemp('<h4><a href="../../../static/front/temp_article/useragreement.html" target="_blank">请认真阅读用户使用协议</a></h4><h5> 并同意</h5>',    'alert-warning'));
+                            return;
+                        }
+
+                        $.ajaxSettings.async = true;
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/user/register",    //CORS
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify({
+                                "register_username": register_username,
+                                "register_password": register_password
+                            }),
+                            dataType: "json",
+
+                            success: function (data) {
+                                var json = data;
+                                if(json.code == '200') {
+                                    if (json.data.success == 2) {
+                                        error.html(msgtemp('<strong>该用户已存在</strong> 请重新输入',    'alert-warning'));
+                                    } else if (json.data.success == 1) {
+                                        alert("注册成功，正在返回登录页面。")
+                                        window.location.href = json.data.url;
+
+                                    }else{
+                                        error.html(msgtemp('<strong>注册失败</strong> 请稍后重试',    'alert-warning'));
+
+                                    }
+                                }else{
+                                    alert("error-服务器内部错误，请稍后重试。");
+                                }
+                            },
+                            error: function (message) {
+                                $("#request-process-patent").html("提交数据失败！");
+                            }
+                        });
+                    });
+
+				$(document).ready(function() {
+					// 判断直接进入哪个页面 例如 login.php?p=register
+					switch($.getUrlParam('p')) {
+						case 'register': $('.register').show(); break;
+						case 'resetpwd': $('.resetpwd').show(); break;
+						default: $('.login').show();
+					};
+
+				});
+			</script>
+		</div>
+	</div>
+	<div class="footer-login container clearfix">
+		<ul class="links">
+			<a href=""><li>网店代销</li></a>
+			<a href=""><li>大猫商城学堂</li></a>
+			<a href=""><li>联系我们</li></a>
+			<a href=""><li>企业简介</li></a>
+			<a href=""><li>新手上路</li></a>
+		</ul>
+		<!-- 版权 -->
+		<p class="copyright">
+			© 2005-2017 大猫商城网 版权所有，并保留所有权利<br>
+			ICP备案证书号：闽ICP备16015525号-2&nbsp;&nbsp;&nbsp;&nbsp;福建省宁德市福鼎市南下村小区（锦昌阁）1栋1梯602室&nbsp;&nbsp;&nbsp;&nbsp;Tel: 18650406668&nbsp;&nbsp;&nbsp;&nbsp;E-mail: 18650406668@qq.com
+		</p>
+	</div>
+</body>
+</html>

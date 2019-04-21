@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.bit.cqt.mall.mapper.ExpressMapper">
+    <sql id="ExpressColumns">
+          a.id,
+          a.uid,
+          a.exp_kind AS 'expKind',
+          a.exp_num AS 'expNum',
+          a.msg AS 'msg',
+          a.created,
+          a.updated
+    </sql>
+    <!--联查语句-->
+    <sql id="ExpressJoins">
+      LEFT JOIN tb_user AS b ON a.uid = b.id
+    </sql>
+
+    <!--根据id查询数据-->
+    <select id="getById" resultType="Express">
+        select
+        <include refid="ExpressColumns" />
+        from
+        tb_Express As a
+        where
+        a.uid=#{uid}
+    </select>
+
+</mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.bit.cqt.mall.mapper.TbAddressMapper">
+    <sql id="itemColumns">
+          a.id,
+          a.user_id,
+          a.o_id,
+          a.o_username,
+          a.o_phone,
+          a.o_address
+    </sql>
+
+    <!--根据id查询数据-->
+    <select id="selectByUserId" resultType="TbAddress">
+        select
+        <include refid="itemColumns" />
+        from
+        tb_address As a
+        where
+        a.user_id=#{userId}
+    </select>
+
+    <select id="selectByOrderId" resultType="TbAddress">
+        select
+        <include refid="itemColumns" />
+        from
+        tb_address As a
+        where
+        a.o_id=#{orderId}
+    </select>
+
+    <!-- 添加-->
+    <insert id="insertAddress">
+        INSERT INTO tb_address (
+            user_id,
+            o_id,
+            o_username,
+            o_phone,
+            o_address
+        )
+        VALUES
+        (
+            #{userId},
+            #{oId},
+            #{oUsername},
+            #{oPhone},
+            #{oAddress}
+        );
+    </insert>
+
+</mapper>

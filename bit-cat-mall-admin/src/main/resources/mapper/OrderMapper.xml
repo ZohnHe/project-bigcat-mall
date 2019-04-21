@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.bit.cqt.mall.mapper.OrderMapper">
+    <sql id="OrderColumns">
+        a.id,
+        a.order_id AS 'orderId',
+        a.payment,
+        a.payment_type AS 'paymentType',
+        a.post_fee AS 'poetFee',
+        a.status,
+        a.create_time AS 'createTime',
+        a.update_time AS 'updateTime',
+        a.payment_time AS 'paymentTime',
+        a.consign_time AS 'consignTime',
+        a.end_time AS 'endTime',
+        a.close_time AS 'closeTime',
+        a.shipping_name AS 'shippingName',
+        a.shipping_code AS 'shippingCode',
+        a.user_id AS 'userId',
+        a.buyer_message AS 'buyerMessage',
+        a.buyer_nick AS 'buyerNick',
+        a.buyer_rate AS 'buyerRate'
+    </sql>
+    <!--联查语句-->
+    <sql id="itemJoins">
+    </sql>
+
+    <!--查询数据表中所有数据-->
+    <select id="selectAll" resultType="Order">
+        SELECT
+        <include refid="OrderColumns"></include>
+        FROM tb_order AS a
+    </select>
+
+    <!--分页-->
+    <select id="page" resultType="Order">
+        SELECT
+        <include refid="OrderColumns"/>
+        FROM
+        tb_order AS a
+        <where>
+
+            <if test=" orderId != null and pageParams.orderId != ''">
+                AND a.order_id LIKE concat('%', #{pageParams.orderId}, '%')
+            </if>
+            <if test="shippingCode != null and pageParams.shippingCode != ''">
+                AND a.shipping_code LIKE concat('%', #{pageParams.shippingCode}, '%')
+            </if>
+            <if test="buyerNick != null and pageParams.buyerNick != ''">
+                AND a.buyer_nick LIKE concat('%', #{pageParams.buyerNick}, '%')
+            </if>
+        </where>
+        LIMIT #{start},#{length}
+    </select>
+    <!--获取总数据条数-->
+    <select id="count" resultType="Integer">
+        SELECT COUNT(*)
+        FROM
+        tb_order AS a
+        <where>
+
+            <if test="orderId != null and orderId != ''">
+                AND a.order_id LIKE concat('%', #{orderId}, '%')
+            </if>
+            <if test="shippingCode != null and shippingCode != ''">
+                AND a.shipping_code LIKE concat('%', #{shippingCode}, '%')
+            </if>
+            <if test="buyerNick != null and buyerNick != ''">
+                AND a.buyer_nick LIKE concat('%', #{buyerNick}, '%')
+            </if>
+        </where>
+    </select>
+
+    <!--根据id查询数据-->
+    <select id="getById" resultType="Order">
+        SELECT
+        <include refid="OrderColumns"></include>
+        FROM tb_order AS a
+        <!--<include refid="joins"></include>-->
+        WHERE a.id = #{id}
+    </select>
+
+    <!-- 修改不用返回类型，就是不用从实体类中获取值 -->
+    <!-- 根据ID修改数据 -->
+    <update id="update">
+        UPDATE
+            tb_order
+        SET
+            status= #{ status },
+            shipping_name=#{shippingName},
+            shipping_code=#{shippingCode},
+            buyer_nick=#{buyerNick}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 添加-->
+    <insert id="add">
+        INSERT INTO tb_order (
+            order_id      ,
+            payment       ,
+            payment_type  ,
+            post_fee      ,
+            status        ,
+            shipping_name ,
+            shipping_code ,
+            buyer_message ,
+            buyer_nick
+        )
+        VALUES
+        (
+            #{orderId     } ,
+            #{payment      } ,
+            #{paymentType } ,
+            #{postFee     } ,
+            #{status       } ,
+            #{shippingName} ,
+            #{shippingCode} ,
+            #{buyerMessage} ,
+            #{buyerNick   }
+        );
+    </insert>
+
+    <!--删除-->
+    <delete id="delete">
+        DELETE
+        FROM tb_order
+        WHERE
+        id=#{id}
+    </delete>
+
+</mapper>

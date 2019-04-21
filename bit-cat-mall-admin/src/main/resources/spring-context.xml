@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+         http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--由于 spring-mvc.xml 中已经配置了 @Controller 注解的扫描而 spring-context.xml 中配置的是扫描全部注解，故在这里需要将 @Controller 注解的扫描配置排除。 -->
+    <!-- 最少知识原则 -->
+    <context:annotation-config/>
+    <!--<context:component-scan base-package="com.cqt.my.store">-->
+        <!--<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>-->
+    <!--</context:component-scan>-->
+    <context:component-scan base-package="com.mall.bit.cqt.mall.service" />
+    <context:component-scan base-package="com.mall.bit.cqt.mall.mapper" />
+    <context:component-scan base-package="com.mall.bit.cqt.mall.controller"/>
+
+    <!-- 开启Spring事务管理 -->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!-- 配置事务通知 -->
+    <tx:advice id="myAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="add*" propagation="REQUIRED"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 配置顾问和切入点 -->
+    <aop:config>
+        <aop:pointcut id="myPointcut" expression="execution(* com.mall.bit.cqt.mall.service.*.*(..))" />
+        <aop:advisor advice-ref="myAdvice" pointcut-ref="myPointcut" />
+    </aop:config>
+
+    <!-- 开启事务注解驱动 -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+</beans>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <description>Spring MVC Configuration</description>
+
+    <!-- 加载配置属性文件 -->
+    <context:property-placeholder ignore-unresolvable="true" location="classpath:mystore.properties"/>
+
+    <!-- 使用 Annotation 自动注册 Bean,只扫描 @Controller -->
+    <context:component-scan base-package="com.mall.bit.cqt.mall.controller" use-default-filters="false">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!-- 默认的注解映射的支持 -->
+    <mvc:annotation-driven />
+
+    <mvc:default-servlet-handler />
+
+    <!--swagger API -->
+    <bean class="com.mall.bit.cqt.mall.swagger.SpringfoxDocConfig"></bean>
+    <!-- 自定义错误处理，将错误转换为系统可识别的输出方式 -->
+  <!--  <bean class="com.cqt.my.store.exception.MyExceptionHandler">
+    </bean>-->
+    <!--&lt;!&ndash;html视图解析器  必须先配置freemarkerConfig,注意html是没有prefix前缀属性的&ndash;&gt;-->
+    <!--<bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">-->
+        <!--<property name="templateLoaderPath">-->
+            <!--<value>/WEB-INF/views/html</value>-->
+        <!--</property>-->
+        <!--<property name="defaultEncoding" value="UTF-8"/>-->
+    <!--</bean>-->
+    <!--<bean id="htmlviewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">-->
+        <!--<property name="suffix" value=".html" />-->
+        <!--<property name="order" value="0" />-->
+        <!--<property name="contentType" value="text/html;charset=UTF-8"/>-->
+    <!--</bean>-->
+
+    <!--&lt;!&ndash; 定义视图解析器 &ndash;&gt;-->
+    <!--<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
+        <!--&lt;!&ndash; 这里的配置我的理解是自动给后面action的方法return的字符串加上前缀和后缀，变成一个 可用的url地址 &ndash;&gt;-->
+        <!--<property name="prefix" value="${web.view.prefix}" />-->
+        <!--<property name="suffix" value=".jsp" />-->
+        <!--<property name="viewClass" value="org.springframework.web.servlet.view.InternalResourceView"/> &lt;!&ndash; 不能用jstl的那个 &ndash;&gt;-->
+        <!--<property name="contentType" value="text/html;charset=UTF-8"/>-->
+        <!--<property name="order" value="1" />-->
+    <!--</bean>-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/html/"/>
+        <property name="suffix" value=".html"/>
+    </bean>
+
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!--拦截全路径-->
+            <mvc:mapping path="/**"/>
+            <!--放行指定路径-->
+            <mvc:exclude-mapping path="/static/**"/>
+            <mvc:exclude-mapping path="/user/**"/>
+            <mvc:exclude-mapping path="/admin/**"/>
+            <mvc:exclude-mapping path="/backuser/**"/>
+            <mvc:exclude-mapping path="/backadmin/**"/>
+            <mvc:exclude-mapping path="/item/**"/>
+            <mvc:exclude-mapping path="/order/**"/>
+            <!--swagger-->
+            <mvc:exclude-mapping path="/swagger-ui.html"/>
+            <mvc:exclude-mapping path="/webjars/**"/>
+            <mvc:exclude-mapping path="/v2/**"/>
+            <mvc:exclude-mapping path="/swagger-resources/**"/>
+            <bean class="com.mall.bit.cqt.mall.interceptor.IndexInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!--<mvc:interceptors>-->
+        <!--<mvc:interceptor>-->
+            <!--&lt;!&ndash;拦截全路径&ndash;&gt;-->
+            <!--<mvc:mapping path="/**"/>-->
+            <!--&lt;!&ndash;放行指定路径&ndash;&gt;-->
+            <!--<mvc:exclude-mapping path="/static/**"/>-->
+            <!--<mvc:exclude-mapping path="/user/**"/>-->
+            <!--<mvc:exclude-mapping path="/admin/**"/>-->
+            <!--<mvc:exclude-mapping path="/shopping/**" />-->
+            <!--<mvc:exclude-mapping path="/sorder/**" />-->
+            <!--&lt;!&ndash;swagger&ndash;&gt;-->
+            <!--<mvc:exclude-mapping path="/swagger-ui.html"/>-->
+            <!--<mvc:exclude-mapping path="/webjars/**"/>-->
+            <!--<mvc:exclude-mapping path="/v2/**"/>-->
+            <!--<mvc:exclude-mapping path="/swagger-resources/**"/>-->
+            <!--<bean class="com.mall.bit.cqt.mall.interceptor.BackLoginInterceptor"/>-->
+        <!--</mvc:interceptor>-->
+    <!--</mvc:interceptors>-->
+
+    <!-- 静态资源映射 -->
+    <!-- /**全路径 -->
+    <mvc:resources mapping="/static/**" location="/static/" cache-period="31536000"/>
+
+    <mvc:annotation-driven/>
+
+    <!-- 上传文件拦截，设置最大上传文件大小 10M = 10*1024*1024(B) = 10485760 bytes -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="10485760"/>
+    </bean>
+
+    <!-- 通过annotation-driven可以替代下边的处理器映射器和适配器 -->
+    <!-- 处理请求时返回json字符串的中文乱码问题 -->
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+</beans>

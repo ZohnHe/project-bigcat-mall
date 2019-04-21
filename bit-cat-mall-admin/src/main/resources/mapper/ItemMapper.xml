@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.bit.cqt.mall.mapper.ItemMapper">
+    <sql id="itemColumns">
+          a.id,
+          a.title,
+          a.sell_point AS 'sellPoint',
+          a.price,
+          a.num,
+          a.barcode,
+          a.image,
+          a.cid,
+          a.status,
+          a.created,
+          a.updated
+    </sql>
+    <!--联查语句-->
+    <sql id="itemJoins">
+      LEFT JOIN tb_item_cat AS b ON a.cid = b.id
+    </sql>
+    <!--查询数据表中所有数据-->
+    <select id="selectAll" resultType="Item">
+        select
+        <include refid="itemColumns" />
+        from
+        tb_item As a
+    </select>
+
+    <!--查询数据表中所有数据前端展示-->
+    <select id="selectList" resultType="Item">
+        select
+        *
+        from
+        tb_item where status = 0
+    </select>
+
+    <!--查询数据表中数据-->
+    <select id="select" resultType="Item">
+        SELECT
+	     a.id,
+	     a.title,
+	     a.sell_point AS 'sellPoint',
+	     a.price,
+	     a.num,
+	     a.image,
+	     b.item_desc AS 'itemDesc'
+       FROM
+        tb_item_desc  AS b ,
+        tb_item  AS a
+       WHERE
+         a.id = b.item_id
+        AND
+        a.id=#{id}
+    </select>
+
+    <!--根据id查询数据-->
+    <select id="getById" resultType="Item">
+        select
+        <include refid="itemColumns" />
+        from
+        tb_item As a
+        where
+        a.id=#{id}
+    </select>
+
+    <!-- 修改不用返回类型，就是不用从实体类中获取值 -->
+    <!-- 根据ID修改数据 -->
+    <update id="update">
+        UPDATE
+            tb_item
+        SET
+            title = #{title},
+            sell_point = #{sellPoint},
+            price = #{price},
+            num = #{num},
+            barcode = #{barcode},
+            image = #{image},
+            cid = #{cid},
+            status = #{status},
+            updated = #{updated}
+        WHERE id = #{id}
+    </update>
+
+    <!--分页-->
+    <select id="page" resultType="Item">
+        SELECT
+        <include refid="itemColumns"/>
+        FROM
+        tb_item AS a
+        <where>
+            <if test="item != null and item.title != null and item.title != ''">
+                AND a.title LIKE CONCAT('%', #{item.title}, '%')
+            </if>
+            <if test="item != null and item.sellPoint != null and item.sellPoint != ''">
+                AND a.sellPoint LIKE CONCAT('%', #{item.sellPoint}, '%')
+            </if>
+        </where>
+        LIMIT #{start},#{length}
+    </select>
+    <!--获取总数据条数-->
+    <select id="count" resultType="Integer">
+        SELECT COUNT(*)
+        FROM
+        tb_item AS a
+        <where>
+            <if test=" title != null and title != ''">
+                AND a.title LIKE CONCAT('%', #{title}, '%')
+            </if>
+            <if test="sellPoint != null and sellPoint != ''">
+                AND a.sellPoint LIKE CONCAT('%', #{sellPoint}, '%')
+            </if>
+        </where>
+    </select>
+
+    <!-- 添加-->
+    <insert id="add">
+        INSERT INTO tb_item (
+            id,
+            title,
+            sell_point,
+            price,
+            num,
+            barcode,
+            image,
+            cid,
+            status,
+            created,
+            updated
+        )
+        VALUES
+        (
+            #{id},
+            #{title},
+            #{sellPoint},
+            #{price},
+            #{num},
+            #{barcode},
+            #{image},
+            #{cid},
+            #{status},
+            #{created},
+            #{updated}
+        );
+    </insert>
+
+    <!--删除-->
+    <delete id="delete">
+        DELETE
+        FROM tb_item
+        WHERE
+        id=#{id}
+    </delete>
+
+</mapper>

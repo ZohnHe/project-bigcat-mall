@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-cn"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+    <meta http-equiv="expires" content="0">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no" media="screen">
+    <title>模拟对话框</title>
+    <link href="/static/front/plugins/char.css" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+<div class="speak_window">
+    <input type="hidden" id="senderId">
+    <input type="hidden" id="senderImage">
+    <input type="hidden" id="receiverId">
+    <input type="hidden" id="receiverImage">
+    <div class="speak_box">
+        <div class="answer">
+
+        </div>
+    </div>
+</div>
+<div class="saying">
+    <img src="/static/front/images/saying.gif">
+</div>
+<div class="wenwen-footer">
+    <div class="wenwen_btn left" onclick="to_write()"><img src="/static/front/images/jp_btn.png"></div>
+    <div class="wenwen_text left">
+        <div class="write_box">
+            <input type="text" id="char-1" class="left" onkeyup="" placeholder="请输入关键字">
+        </div>
+        <div class="circle-button" id="wenwen">
+            按住 说话
+        </div>
+    </div>
+    <div class="wenwen_help right">
+        <a href="#">
+            <img src="/static/front/images/help_btn.png">
+        </a>
+        <button onclick="send()" class="right">发送</button>
+    </div>
+    <div style="opacity:0;" class="clear"></div>
+</div>
+</body>
+<script type="text/javascript" src="https://cdn-hangzhou.goeasy.io/goeasy.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js" type="text/javascript"></script>
+<script src="/static/front/plugins/dateutils.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(
+        function () {
+            //获取发送者id和接收者id
+            $.ajax({
+                type:"post",
+                url:"/record/getMsg",
+                async: false,
+                dataType:"json",
+                success:function (data) {
+                    var json = data;
+                    $("#senderId").val(json.senderId);
+                    $("#receiverId").val(json.receiverId);
+                    $("#senderImage").val(json.senderImage);
+                    $("#receiverImage").val(json.recevierImage);
+                }
+            })
+            var sender_id = $('#senderId').val() + "";
+            var recevier_id = $('#receiverId').val() + "";
+            var senderImage = $('#senderImage').val();
+            var recevierImage = $('#receiverImage').val();
+            $.ajax({
+                url: "/record/list",
+                type: "post",
+                data: {
+                    "sender_id": sender_id,
+                    "recevier_id": recevier_id
+                },
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        //如果自己发送的消息
+                        if (data[i].senderId == sender_id) {
+                            var created = DateUtils.formatDate(new Date(data[i].created));
+                            str = '<div class="question">';
+                            str += '<div><p>' + created + '</p>';
+                            str += '<div class="heard_img right"><img src="' +senderImage+ '"/></div>';
+                            str += '<div class="question_text clear"><p>' + data[i].message + +'</p><i></i>';
+                            str += '</div></div>';
+                            $('.speak_box').append(str);
+                        }
+                        //对方发送的消息
+                        else {
+                            var ans = '<div class="answer">';
+                            ans += '<div><p>' + created + '</p>';
+                            ans += '<div class="heard_img left"><img src="' +recevierImage+ '"/></div>';
+                            ans += '<div class="answer_text"><p>' + data[i].message + '</p><i></i>';
+                            ans += '</div></div>';
+                            $('.speak_box').append(ans);
+                        }
+                    }
+                }
+            })
+
+        }
+    )
+
+    // var sender_id = $('#senderId').val() + "";
+    // var recevier_id = $('#receiverId').val() + "";
+
+    //初始化goEasy对象
+
+    var goEasy;
+    $(function () {
+        var sender_id = $('#senderId').val()+"";
+        var recevier_id = $('#receiverId').val()+"";
+        var recevierImage = $('#receiverImage').val();
+        goEasy = new GoEasy({
+            appkey: 'BC-208fb17bc17a4ab6a2942ff7d0990890',
+            onConnected: function () {
+                // alert("成功连接GoEasy。");
+            },
+            onDisconnected: function () {
+                //alert("与GoEasy连接断开。");
+            },
+            onConnectFailed: function (error) {
+                // alert("与GoEasy连接失败，错误编码："+error.code+"错误信息："+error.content);
+            }
+        })
+        //初始化监听接口，接受好友消息
+        goEasy.subscribe({
+            channel: sender_id,
+            onMessage: function (message) {
+                // alert("Channel:" + message.channel + " content:" + message.content);
+                var msg = message.content;
+                var ans = '<div class="answer">';
+                ans += '<div><p>' +DateUtils.formatDate(new Date()) + '</p>';
+                ans += '<div class="heard_img left"><img src="' +recevierImage+ '"/></div>';
+                ans += '<div class="answer_text"><p>' + msg + '</p><i></i>';
+                ans += '</div></div>';
+                $('.speak_box').append(ans);
+            },
+            onSuccess: function () {
+                // alert("Channel订阅成功。");
+            },
+            onFailed: function (error) {
+                // alert("Channel订阅失败, 错误编码：" + error.code + " 错误信息：" + error.content)
+            }
+
+        })
+    })
+    //点击好友
+    //
+    // function getRecord(pictrue,friendId) {
+    //     var sender_id = $('#senderId').val() + "";
+    //     img = pictrue;
+    //     recevier_id = friendId;
+    //     $.ajax({
+    //         url: "/record/list",
+    //         type: "post",
+    //         data: {
+    //             "sender_id": sender_id,
+    //             "recevier_id": recevier_id
+    //         },
+    //         success: function (data) {
+    //             for (var i = 0; i < data.length; i++) {
+    //                 //如果自己发送的消息
+    //                 if (data[i].senderId == sender_id) {
+    //                     var created = DateUtils.formatDate(new Date(data[i].created));
+    //                         str = '<div class="question">';
+    //                     str += '<div><p>' + created + '</p>';
+    //                     str += '<div class="heard_img right"><img src="' + '"/></div>';
+    //                     str += '<div class="question_text clear"><p>' + data[i].message + +'</p><i></i>';
+    //                     str += '</div></div>';
+    //                     $('.speak_box').append(str);
+    //                 }
+    //                 //对方发送的消息
+    //                 else {
+    //                     var ans = '<div class="answer">';
+    //                     ans += '<div><p>' + created + '</p>';
+    //                     ans += '<div class="heard_img left"><img src=""/></div>';
+    //                     ans += '<div class="answer_text"><p>' + data[i].message + '</p><i></i>';
+    //                     ans += '</div></div>';
+    //                     $('.speak_box').append(ans);
+    //                 }
+    //             }
+    //         }
+    //     })
+    // }
+
+    //推送消息
+    function send() {
+        var sender_id = $('#senderId').val() + "";
+        var recevier_id = $('#receiverId').val() + "";
+        var senderImage = $('#senderImage').val();
+        var message = $("#char-1").val();
+        goEasy.publish({
+            channel: recevier_id,
+            message: message,
+            onSuccess: function () {
+                $.ajax({
+                    url: "/record/save",
+                    type: "post",
+                    data: {
+                        "senderId": sender_id,
+                        "recevierId": recevier_id,
+                        "message": message,
+                    }
+                });
+                //清除输入框
+                $('.write_list').remove();
+                //将输入框内容填入聊天室
+                var text = $('.write_box input').val(),
+                    str = '<div class="question">';
+                str += '<div><p>' + DateUtils.formatDate(new Date()) + '</p>';
+                str += '<div class="heard_img right"><img src="' +senderImage+ '"/></div>';
+                str += '<div class="question_text clear"><p>' + text + '</p><i></i>';
+                str += '</div></div>';
+                $('.speak_box').append(str);
+                $('.write_box input').val(null);
+            },
+            onFailed: function (error) {
+                alert("消息发送失败，错误编码：" + error.code + " 错误信息：" + error.content);
+            }
+        })
+    }
+
+    function to_write() {
+        $('.wenwen_btn img').attr('src', '/static/front/images/yy_btn.png');
+        $('.wenwen_btn').attr('onclick', 'to_say()');
+        $('.write_box,.wenwen_help button').show();
+        $('.circle-button,.wenwen_help a').hide();
+        $('.write_box input').focus();
+        for_bottom();
+    }
+
+    function for_bottom() {
+        var speak_height = $('.speak_box').height();
+        $('.speak_box,.speak_window').animate({scrollTop: speak_height}, 500);
+    }
+
+    function autoWidth() {
+        $('.question_text').css('max-width', $('.question').width() - 60);
+    }
+
+    autoWidth();
+
+</script>
+</html>

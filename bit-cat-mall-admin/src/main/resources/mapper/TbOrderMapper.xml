@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.bit.cqt.mall.mapper.TbOrderMapper">
+    <sql id="itemColumns">
+       a.id            ,
+        a.order_id      ,
+        a.payment       ,
+        a.payment_type  ,
+        a.post_fee      ,
+        a.status        ,
+        a.create_time   ,
+        a.update_time   ,
+        a.payment_time  ,
+        a.consign_time  ,
+        a.end_time      ,
+        a.close_time    ,
+        a.shipping_name ,
+        a.shipping_code ,
+        a.user_id       ,
+        a.buyer_message ,
+        a.buyer_nick    ,
+        a.buyer_rate
+    </sql>
+
+    <!--根据id查询数据-->
+    <select id="selectByUserId" resultType="TbOrder">
+        select
+        <include refid="itemColumns" />
+        from
+        tb_order As a
+        where
+        a.user_id=#{userId}
+    </select>
+
+    <!-- 修改不用返回类型，就是不用从实体类中获取值 -->
+    <!-- 根据ID修改数据 -->
+    <update id="updateOrder">
+        UPDATE
+            tb_order
+        SET
+        order_id      =#{orderId     },
+        payment       =#{payment      },
+        payment_type  =#{paymentType },
+        post_fee      =#{postFee     },
+        status        =#{status       },
+        create_time   =#{createTime  },
+        update_time   =#{updateTime  },
+        payment_time  =#{paymentTime },
+        consign_time  =#{consignTime },
+        end_time      =#{endTime     },
+        close_time    =#{closeTime   },
+        shipping_name =#{shippingName},
+        shipping_code =#{shippingCode},
+        user_id       =#{userId      },
+        buyer_message =#{buyerMessage},
+        buyer_nick    =#{buyerNick   },
+        buyer_rate    =#{buyerRate   }
+        WHERE id = #{id}
+    </update>
+
+    <!-- 添加-->
+    <insert id="insertOrder">
+        INSERT INTO tb_order (
+        order_id      ,
+        payment       ,
+        payment_type  ,
+        post_fee      ,
+        status        ,
+        create_time   ,
+        update_time   ,
+        payment_time  ,
+        consign_time  ,
+        end_time      ,
+        close_time    ,
+        shipping_name ,
+        shipping_code ,
+        user_id       ,
+        buyer_message ,
+        buyer_nick    ,
+        buyer_rate
+        )
+        VALUES
+        (
+            #{orderId     },
+            #{payment      },
+            #{paymentType },
+            #{postFee     },
+            #{status       },
+            #{createTime  },
+            #{updateTime  },
+            #{paymentTime },
+            #{consignTime },
+            #{endTime     },
+            #{closeTime   },
+            #{shippingName},
+            #{shippingCode},
+            #{userId      },
+            #{buyerMessage},
+            #{buyerNick   },
+            #{buyerRate   }
+        );
+    </insert>
+
+    <!--删除-->
+    <delete id="delete">
+        DELETE
+        FROM tb_order
+        WHERE
+        id=#{id}
+    </delete>
+
+</mapper>
